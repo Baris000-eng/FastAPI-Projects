@@ -15,5 +15,10 @@ This project is similar to the Project#1. However, it also involves some importa
 query parameter validation, and path parameter validation. This project performs the data parsing, field validation, path parameter validation and 
 query parameter validation by using the Pydantic library of Python.
 
+Todo Application with the ORM-based database framework called "SQLAlchemy", RDBMS called "Sqlite", 
+and Data Parsing & Validation library called 'Pydantics' (Project#3):
+
+In the project 3, the ORM-based database framework called SQLAlchemy and RDBMS called 'Sqlite' is experienced.
+
 
 
