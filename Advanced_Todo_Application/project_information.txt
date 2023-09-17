@@ -1,0 +1,10 @@
+This project is an advanced version of the Todo Application project, which is Project#3.
+
+# Compared to Project#3, it additionally includes the following topics:
+
+User Authorization with JSON Web Tokens (JWT)
+ - JWT Encoding and Decoding
+ - Hashing the user password with the usage of bcrypt functions.
+ - User authentication implemented with bcrypt functions.
+ - Additional documentation for JSON Web Tokens, ORM-Based DB Models, and
+ One-To-Many table relationships.
