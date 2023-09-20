@@ -4,14 +4,11 @@ from typing import Annotated
 from Token import Token
 
 from fastapi import APIRouter, Depends
-from passlib.context import CryptContext
 from sqlalchemy.orm import Session
-from sqlalchemy.sql.functions import user
 from starlette import status
 from jose import JWTError, jwt
 from fastapi import HTTPException
 
-import DbUsersTableModel
 import PasswordHashingService
 from CreateUserRequest import CreateUserRequest
 from DatabaseConnection import local_session
@@ -41,7 +38,7 @@ apiRouter = APIRouter(
 # authorized.
 SECRET_KEY = "a18383838GGjfewjfk..!!,00099xz00ecvbh70*936"
 SIGNING_AND_VERIFICATION_ALGORITHM = 'HS256'
-oauth2_bearer = OAuth2PasswordBearer(tokenUrl='auth/token')
+oauth2_bearer = OAuth2PasswordBearer(tokenUrl='auth/usertoken')
 
 
 # Yield keyword in Python means that only the code
@@ -63,8 +60,8 @@ database_dependency = Annotated[Session, Depends(obtain_database)]
 form_dependency = Annotated[OAuth2PasswordRequestForm, Depends()]
 
 
-def create_access_token(username: str, user_id: int, expires_delta: timedelta):
-    encode = {'sub': username, 'id': user_id}
+def create_access_token(username: str, user_id: int, user_role: str, expires_delta: timedelta):
+    encode = {'sub': username, 'id': user_id, 'role': user_role}
     expires = datetime.utcnow() + expires_delta
     encode.update({'exp': expires})
     return jwt.encode(encode, SECRET_KEY, algorithm=SIGNING_AND_VERIFICATION_ALGORITHM)
@@ -89,13 +86,14 @@ async def get_current_user(token: Annotated[str, Depends(oauth2_bearer)]):
     try:
         jwt_payload = jwt.decode(token, SECRET_KEY, algorithms=[SIGNING_AND_VERIFICATION_ALGORITHM])
         username: str = jwt_payload.get('sub')
-        user_id: str = jwt.payloat.get('id')
+        user_id: str = jwt_payload.get('id')
+        user_role: str = jwt_payload.get('role')
         if user_id is None or username is None:
             raise HTTPException(
                 status_code=status.HTTP_401_UNAUTHORIZED,
                 detail="User validation cannot be done"
             )
-        return {"username": username, "id": user_id}
+        return {"username": username, "id": user_id, "user_role": user_role}
     except JWTError:
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
@@ -141,5 +139,5 @@ async def login_for_access_token(form_data: form_dependency,
             detail='User validation cannot be done.'
         )
 
-    token = create_access_token(user_object.username, user_object.user_id, timedelta(minutes=30))
+    token = create_access_token(user_object.username, user_object.user_id, user_object.user_role, timedelta(minutes=30))
     return {"token_type": "bearer", "access_token": token}
