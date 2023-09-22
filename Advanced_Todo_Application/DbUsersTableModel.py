@@ -1,4 +1,4 @@
-from DatabaseConnection import database_object
+from SQLiteDatabaseConnection import database_object
 from sqlalchemy import Integer, Column, Boolean, String
 
 

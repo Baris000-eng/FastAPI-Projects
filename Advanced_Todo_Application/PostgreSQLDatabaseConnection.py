@@ -6,10 +6,8 @@
 from sqlalchemy import create_engine
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker
-
 from DatabaseConstants import DatabaseConstants
 
-
-engine = create_engine(DatabaseConstants.SQLALCHEMY_DATABASE_URL, connect_args={'check_same_thread': False})
+engine = create_engine(DatabaseConstants.POSTGRESQL_DATABASE_URL)
 local_session = sessionmaker(autocommit=False, autoflush=False, bind=engine)
 database_object = declarative_base()

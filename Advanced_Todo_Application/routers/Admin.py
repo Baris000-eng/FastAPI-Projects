@@ -4,7 +4,7 @@ from starlette import status
 from typing import Annotated
 from sqlalchemy.orm import Session
 from DbTodosTableModel import Todos
-from DatabaseConnection import local_session
+from SQLiteDatabaseConnection import local_session
 from .UserAuthentication import get_current_user
 from TodoRequest import TodoRequest
 

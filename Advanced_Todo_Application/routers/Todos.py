@@ -4,7 +4,8 @@ from starlette import status
 from typing import Annotated
 from sqlalchemy.orm import Session
 from DbTodosTableModel import Todos
-from DatabaseConnection import local_session
+# from SQLiteDatabaseConnection import local_session # for sqlite3 db
+from PostgreSQLDatabaseConnection import local_session  # for postgresql db
 from .UserAuthentication import get_current_user
 from TodoRequest import TodoRequest
 
@@ -56,7 +57,8 @@ async def getTodoById(user: user_dependency,
         raise HTTPException(status_code=401, detail="User Authentication is Failed")
     todo_model = database.query(Todos).filter(
         Todos.todo_id == todo_id).filter(
-        Todos.owner_id == user.get('id')).first()  # get the first record where todo ids match. Due to the uniqueness of todo ids, using first() will be fine here.
+        Todos.owner_id == user.get(
+            'id')).first()  # get the first record where todo ids match. Due to the uniqueness of todo ids, using first() will be fine here.
     if todo_model is None:
         raise HTTPException(status_code=404, detail="Todo is not found")
     return todo_model
@@ -82,7 +84,8 @@ async def create_todo(
 async def update_todo(user: user_dependency,
                       database: database_dependency, todo_req: TodoRequest,
                       todo_id: int = Query(description="The ID of the todo item to update", gt=0)):
-    todo_object_model = database.query(Todos).filter(Todos.todo_id == todo_id).filter(Todos.owner_id == user.get('id')).first()
+    todo_object_model = database.query(Todos).filter(Todos.todo_id == todo_id).filter(
+        Todos.owner_id == user.get('id')).first()
     print(todo_object_model)
     if todo_object_model is None:
         raise HTTPException(status_code=404, detail='Todo cannot be found in the db table called todos')
@@ -111,7 +114,7 @@ async def delete_todo(
         todo_id: int = Path(gt=0)):
     if user is None:
         raise HTTPException(status_code=401, detail='User authentication is failed.')
-    todo_object_model = database.query(Todos).filter(Todos.todo_id == todo_id)\
+    todo_object_model = database.query(Todos).filter(Todos.todo_id == todo_id) \
         .filter(Todos.owner_id == user.get('id')).first()
     if todo_object_model is None:
         raise HTTPException(status_code=404, detail='Todo cannot be found in the db table called todos')
