@@ -11,7 +11,8 @@ from fastapi import HTTPException
 
 import PasswordHashingService
 from CreateUserRequest import CreateUserRequest
-from PostgreSQLDatabaseConnection import local_session
+# from PostgreSQLDatabaseConnection import local_session # for postgresql db
+from MySQLDatabaseConnection import local_session  # for mysql db
 from DbUsersTableModel import Users
 from PasswordHashingService import hashPassword
 from fastapi.security import OAuth2PasswordBearer, OAuth2PasswordRequestForm

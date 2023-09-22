@@ -1,6 +1,8 @@
-from SQLiteDatabaseConnection import database_object
+from MySQLDatabaseConnection import database_object
 from sqlalchemy import Integer, Column, ForeignKey, Boolean, String
 
+
+# from SQLiteDatabaseConnection import database_object
 
 class Todos(database_object):
     __tablename__ = 'todos'
@@ -11,4 +13,3 @@ class Todos(database_object):
     todo_description = Column(String)
     todo_priority = Column(Integer)
     owner_id = Column(Integer, ForeignKey("users.user_id"))
-

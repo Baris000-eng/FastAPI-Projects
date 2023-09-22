@@ -1,5 +1,6 @@
-from SQLiteDatabaseConnection import database_object
+# from SQLiteDatabaseConnection import database_object
 from sqlalchemy import Integer, Column, Boolean, String
+from MySQLDatabaseConnection import database_object
 
 
 # To verify a user, instead of comparing the actual passwords
