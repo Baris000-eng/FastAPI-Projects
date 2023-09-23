@@ -4,8 +4,8 @@ from starlette import status
 from typing import Annotated
 from sqlalchemy.orm import Session
 from DbTodosTableModel import Todos
-# from SQLiteDatabaseConnection import local_session
-from MySQLDatabaseConnection import local_session
+from SQLiteDatabaseConnection import local_session
+# from MySQLDatabaseConnection import local_session
 from DbUsersTableModel import Users
 from UserVerification import UserVerification
 from .UserAuthentication import get_current_user
@@ -48,7 +48,7 @@ async def get_user(user: user_dependency, database: database_dependency):
 
 
 @apiRouter.put('/changePassword', status_code=status.HTTP_204_NO_CONTENT)
-async def change_password(user: user_dependency, database: database_dependency, user_verification:UserVerification):
+async def change_password(user: user_dependency, database: database_dependency, user_verification: UserVerification):
     if user is None:
         raise HTTPException(status_code=401, detail='User authentication is failed.')
 
@@ -59,5 +59,19 @@ async def change_password(user: user_dependency, database: database_dependency, 
 
     user_model.hashed_password = bcrypt_context.hash(user_verification.new_password)
     print(user_model.hashed_password)
+    database.add(user_model)
+    database.commit()
+
+
+@apiRouter.put("/updatePhoneNumber/{phone_number}", status_code=status.HTTP_204_NO_CONTENT)
+async def update_phone_number(user: user_dependency, database: database_dependency,
+                              phone_number: str = Path()):
+    if user is None:
+        raise HTTPException(status_code=401, detail='User authentication is failed.')
+
+    user_model = database.query(Users).filter(Users.user_id == user.get('id')).first()
+
+    user_model.phone_number = phone_number
+
     database.add(user_model)
     database.commit()

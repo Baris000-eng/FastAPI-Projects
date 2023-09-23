@@ -12,7 +12,8 @@ from fastapi import HTTPException
 import PasswordHashingService
 from CreateUserRequest import CreateUserRequest
 # from PostgreSQLDatabaseConnection import local_session # for postgresql db
-from MySQLDatabaseConnection import local_session  # for mysql db
+# from MySQLDatabaseConnection import local_session  # for mysql db
+from SQLiteDatabaseConnection import local_session
 from DbUsersTableModel import Users
 from PasswordHashingService import hashPassword
 from fastapi.security import OAuth2PasswordBearer, OAuth2PasswordRequestForm
@@ -121,7 +122,8 @@ async def create_user(database: database_dependency,
         surname=createUserRequest.surname,
         user_role=createUserRequest.role,
         hashed_pwd=hashPassword(createUserRequest.password),
-        is_active=True
+        is_active=True,
+        phone_number=createUserRequest.phone_number
     )
 
     database.add(user_model)

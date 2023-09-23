@@ -4,9 +4,9 @@ from starlette import status
 from typing import Annotated
 from sqlalchemy.orm import Session
 from DbTodosTableModel import Todos
-# from SQLiteDatabaseConnection import local_session # for sqlite3 db
+from SQLiteDatabaseConnection import local_session # for sqlite3 db
 # from PostgreSQLDatabaseConnection import local_session  # for postgresql db
-from MySQLDatabaseConnection import local_session # for mysql db
+# from MySQLDatabaseConnection import local_session # for mysql db
 from .UserAuthentication import get_current_user
 from TodoRequest import TodoRequest
 

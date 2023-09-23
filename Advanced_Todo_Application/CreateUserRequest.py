@@ -8,3 +8,4 @@ class CreateUserRequest(BaseModel):
     surname: str
     password: str
     role: str
+    phone_number: str
