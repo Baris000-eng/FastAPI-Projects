@@ -1,0 +1,72 @@
+What is Alembic ?
+
+- Alembic is a lightweight database migration tool for when using SQLAlchemy. It is a
+- powerful migration tool that allows us to change our database schemes.
+- Migration tools allow us to plan, upgrade, and transfer resources within databases.
+- Alembic allows us to change a SQLAlchemy database table after it has already been created.
+- Currently SQLAlchemy will only create new database tables for us, not improve any.
+
+Note: As our application evolves, our database will need to evolve as well.
+
+How does Alembic work ?
+
+- Alembic provides the creation and call of the change management scripts. This allows you
+to be able to create migration environments and be able to change data how you want.
+
+- Alembic helps us to be able to keep modifying our database to keep up with the rapid
+- development requirements.
+
+- Alembic allows us to be able to continually create additional content that works
+- within our application.
+
+Important Note: "pip install alembic" command will download all of the dependencies
+to be able to use alembic in our project.
+
+Alembic Commands
+
+Alembic Command                         Details of the Command
+alembic init <folder name>              It initializes a new and generic environment.
+alembic revision -m <message>           It creates a new revision of the environment. Change and migration of database happens with this command.
+alembic upgrade <revision id #>         It runs our upgrade migration to our database.
+alembic downgrade -1                    It runs our downgrade migration to our database.
+
+
+Alembic.ini file
+
+1-) This is the file that alembic looks for when being invoked.
+2-) It contains a bunch of configuration information for Alembic
+which we are able to change to match our project.
+
+Alembic Directory
+
+1-) The Alembic directory has all environmental properties for alembic.
+2-) It holds all revisions of your applications (for the data integrity and migration)
+3-) It is the place where the migrations for upgrading or downgrading can be called.
+
+Alembic Revisions
+
+* Alembic revision is how we create a new alembic file where we can add some
+type of database upgrade.
+
+* 'alembic revision -m "create phone number col on users table"' command
+creates a new file where we can write the upgrade code.
+
+* Each new revision will have a revision id. This is the unique identifier
+assigned to each Alembic revision.
+
+* Alembic upgrade is how we actually run the data migration.
+
+* The existing data within database does not change while running an Alembic upgrade.
+
+- To run the alembic upgrade migration, we can use the below command:
+alembic upgrade <revision id>
+
+Alembic Downgrade
+
+* Alembic downgrade is how we revert a migration. It is supposed to revert
+our database to remove the last migration change.
+
+- To run the alembic downgrade migration, we can use the below command:
+alembic downgrade -1
+
+- 'alembic downgrade -1' command will revert the last migration.

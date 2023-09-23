@@ -16,3 +16,4 @@ class Users(database_object):
     hashed_pwd = Column(String)  # hashed password
     user_role = Column(String)
     is_active = Column(Boolean, default=True)  # The default value given to the is_active column is True.
+    phone_number = Column(String) # This field is added for the alembic data migration.

@@ -44,7 +44,7 @@ async def get_user(user: user_dependency, database: database_dependency):
     if user is None:
         raise HTTPException(status_code=401, detail='User authentication cannot be done.')
 
-    return database.query(Todos).filter(Users.user_id == user.get('id')).first()
+    return database.query(Users).filter(Users.user_id == user.get('id')).first()
 
 
 @apiRouter.put('/changePassword', status_code=status.HTTP_204_NO_CONTENT)
