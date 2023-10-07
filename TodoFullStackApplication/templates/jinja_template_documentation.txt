@@ -1,0 +1,34 @@
+# What is Jinja Template ?
+
+# Jinja tags allow developers to be confident while working with backend data, using tags that are similar
+to HTML.
+
+# Jinja template is a fast, extensible, and expressive templating language.
+
+# It is able to write code similar to the Python in the DOM model.
+
+# Example:
+
+In the todos.py file,
+
+context: {
+   "todos": todo_list
+}
+
+In the homepage.html file,
+
+{% for todo in todos %}
+   Do something with todo
+{% endfor %}
+
+# We can also use Jinja templating language with if else statements. It is shown below:
+
+{% if todos %}
+   Displaying: {{ todos|length }} Todos
+{% else % }
+   You don't have any todos :)
+{% endif % }
+
+In the Jinja templating, we end the for loop with '{% endfor %} while ending the if statement with '{% endif %}'
+
+# The template is passed data to render

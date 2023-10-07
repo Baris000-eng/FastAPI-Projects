@@ -1,0 +1,76 @@
+
+
+
+<div class="container">
+    <div class="card text-center">
+        <div class="card-header">
+            Your Todos
+        </div>
+        <div class="card-body">
+            <h4 class="card-title">List of Your Todos</h4>
+            <p class="card-text">Information regarding stuff that needs to be complete</p>
+            <table class="table table-hover">
+                <!-- table header -->
+                <thead>
+                <!-- table row -->
+                <tr>
+                    <th scope="col">#</th>
+                    <th scope="col">Todo Information</th>
+                    <th scope="col">Todo Information</th>
+                    <th scope="col">Actions</th>
+                </tr>
+                </thead>
+
+                <tbody>
+                    <tr class="pointer">
+                        <td>User 1</td>
+                        <td>Feed The Dogs</td>
+                        <td>Take Out The Trash</td>
+                        <td>
+                            <button type="button" class="btn btn-danger">Delete</button>
+                            <button type="button" class="btn btn-success">Complete</button>
+                        </td>
+                    </tr>
+
+                    <tr class="pointer">
+                        <td>User 2</td>
+                        <td>Feed The Dogs</td>
+                        <td>Tidy Up Your Room</td>
+                        <td>
+                            <button type="button" class="btn btn-danger">Delete</button>
+                            <button type="button" class="btn btn-success">Complete</button>
+                        </td>
+                    </tr>
+
+
+                    <tr class="pointer">
+                        <td>User 3</td>
+                        <td>Take Out The Trash</td>
+                        <td>Tidy Up Your Room</td>
+                        <td>
+                            <button type="button" class="btn btn-danger">Delete</button>
+                            <button type="button" class="btn btn-success">Complete</button>
+                        </td>
+                    </tr>
+
+
+
+                </tbody>
+            </table>
+
+            <a class="btn btn-primary" href="#">Add a New Todo</a>
+        </div>
+    </div>
+</div>
+
+
+
+
+
+
+<script src="{{ url_for('static', path = 'todo/js/jquery-slim.js') }}"></script>
+<script src="{{ url_for('static', path = 'todo/js/popper.js') }}"></script>
+<script src="{{ url_for('static', path = 'todo/js/bootstrap.js') }}"></script>
+
+</body>
+</html>
