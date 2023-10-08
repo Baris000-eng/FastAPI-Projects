@@ -2,6 +2,8 @@ import sys
 from starlette.requests import Request
 from typing import Optional
 from fastapi import Depends, HTTPException, APIRouter
+from starlette.templating import Jinja2Templates
+
 import models
 from database import engine, SessionLocal
 from sqlalchemy.orm import Session
@@ -14,6 +16,18 @@ class Todo(BaseModel):
     description: Optional[str]
     priority: int = Field(gt=0, lt=6, description="The priority must be between 1-5")
     complete: bool
+
+
+router = APIRouter(
+    prefix="/todos",
+    tags=["todos"],
+    responses={404: {"description": "Not found"}}
+)
+
+models.Base.metadata.create_all(bind=engine)
+
+# Specifying the place where the Jinja2 templates live
+templates = Jinja2Templates(directory="templates")
 
 
 # In order to test the below endpoint, use the following link:

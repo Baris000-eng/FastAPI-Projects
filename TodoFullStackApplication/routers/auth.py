@@ -125,6 +125,12 @@ async def login_for_access_token(form_data: OAuth2PasswordRequestForm = Depends(
     return {"token": token}
 
 
+@router.get("/register", response_class=HTMLResponse)
+async def register(request: Request):
+    return templates.TemplateResponse("registerpage.html", {"request": request})
+
+
+# Endpoint: http://127.0.0.1:8000/auth/
 @router.get("/", response_class=HTMLResponse)
 async def authenticationPage(request: Request):
     return templates.TemplateResponse("loginpage.html", {"request": request})

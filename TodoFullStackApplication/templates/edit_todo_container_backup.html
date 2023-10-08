@@ -1,11 +1,17 @@
-{% include 'layout.html' %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Edit Todo Container Backup</title>
+</head>
+<body>
 <div class="container">
     <div class="card">
         <div class="card-header">
-            Make A New Todo
+            Let's Edit Your Todo!
         </div>
         <div class="card-body">
-            <form method="POST">
+            <form>
                 <div class="form-group">
                     <label>Title</label>
                     <!-- Here, required means that it is necessary to type some text for the title field-->
@@ -27,16 +33,12 @@
                          <option>5</option>
                     </select>
                 </div>
-                <button type="submit" class="btn btn-primary">Add New Todo</button>
+                <button type="submit" class="btn btn-primary">Edit Your Todo</button>
+                <button type="button" class="btn btn-danger"> Delete </button>
             </form>
         </div>
     </div>
 </div>
-
-
-<script src="{{ url_for('static', path = 'todo/js/jquery-slim.js') }}"></script>
-<script src="{{ url_for('static', path = 'todo/js/popper.js') }}"></script>
-<script src="{{ url_for('static', path = 'todo/js/bootstrap.js') }}"></script>
 
 </body>
 </html>

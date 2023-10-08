@@ -1,11 +1,17 @@
-{% include 'layout.html' %}
-<div class="container">
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Add Todo Container Backup</title>
+</head>
+<body>
+    <div class="container">
     <div class="card">
         <div class="card-header">
             Make A New Todo
         </div>
         <div class="card-body">
-            <form method="POST">
+            <form>
                 <div class="form-group">
                     <label>Title</label>
                     <!-- Here, required means that it is necessary to type some text for the title field-->
@@ -33,10 +39,6 @@
     </div>
 </div>
 
-
-<script src="{{ url_for('static', path = 'todo/js/jquery-slim.js') }}"></script>
-<script src="{{ url_for('static', path = 'todo/js/popper.js') }}"></script>
-<script src="{{ url_for('static', path = 'todo/js/bootstrap.js') }}"></script>
 
 </body>
 </html>

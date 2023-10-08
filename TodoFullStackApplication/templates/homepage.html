@@ -1,15 +1,4 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-      <!-- embedding css into html -->
-    <link rel = 'stylesheet' type="text/css"
-          href="{{ url_for('static',path = 'todo/css/homepage.css')}}">
-    <link rel = 'stylesheet' type="text/css" href="{{ url_for('static', path = 'todo/css/bootstrap.css') }}">
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <title>Homepage</title>
-</head>
-<body>
+{% include 'layout.html' %}
 
 <div class="container">
     <div class="card text-center">
@@ -26,61 +15,27 @@
                 <tr>
                     <th scope="col">#</th>
                     <th scope="col">Todo Information</th>
-                    <th scope="col">Todo Information</th>
                     <th scope="col">Actions</th>
                 </tr>
                 </thead>
-
                 <tbody>
+                    {% for todo in todos %}
                     <tr class="pointer">
-                        <td>User 1</td>
-                        <td>Feed The Dogs</td>
-                        <td>Take Out The Trash</td>
+                        <td>Todo {{ loop.index }}</td>
+                        <td>{{todo.title}}</td>
                         <td>
                             <button type="button" class="btn btn-danger">Delete</button>
                             <button type="button" class="btn btn-success">Complete</button>
+                            <button onclick="window.location.href='editTodo/{{todo.id}}'" type="button" class="btn btn-info">Edit</button>
                         </td>
                     </tr>
-
-                    <tr class="pointer">
-                        <td>User 2</td>
-                        <td>Feed The Dogs</td>
-                        <td>Tidy Up Your Room</td>
-                        <td>
-                            <button type="button" class="btn btn-danger">Delete</button>
-                            <button type="button" class="btn btn-success">Complete</button>
-                        </td>
-                    </tr>
-
-
-                    <tr class="pointer">
-                        <td>User 3</td>
-                        <td>Take Out The Trash</td>
-                        <td>Tidy Up Your Room</td>
-                        <td>
-                            <button type="button" class="btn btn-danger">Delete</button>
-                            <button type="button" class="btn btn-success">Complete</button>
-                        </td>
-                    </tr>
-
-
-
+                    {% endfor %}
                 </tbody>
             </table>
-
-            <a class="btn btn-primary" href="#">Add a New Todo</a>
+            <a class="btn btn-primary" href="addTodo">Add a New Todo</a>
         </div>
     </div>
 </div>
 
 
 
-
-
-
-<script src="{{ url_for('static', path = 'todo/js/jquery-slim.js') }}"></script>
-<script src="{{ url_for('static', path = 'todo/js/popper.js') }}"></script>
-<script src="{{ url_for('static', path = 'todo/js/bootstrap.js') }}"></script>
-
-</body>
-</html>
