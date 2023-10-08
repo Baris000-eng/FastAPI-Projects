@@ -20,15 +20,30 @@
                 </thead>
                 <tbody>
                     {% for todo in todos %}
+                    {% if todo.complete == False %} <!-- The todo is not completed yet.-->
                     <tr class="pointer">
                         <td>Todo {{ loop.index }}</td>
                         <td>{{todo.title}}</td>
                         <td>
-                            <button type="button" class="btn btn-danger">Delete</button>
-                            <button type="button" class="btn btn-success">Complete</button>
-                            <button onclick="window.location.href='editTodo/{{todo.id}}'" type="button" class="btn btn-info">Edit</button>
+                            <button onclick="window.location.href='/todos/deleteTodo/{{todo.id}}'" type="button" class="btn btn-danger">Delete</button>
+                            <button onclick="window.location.href='/todos/completeTodo/{{todo.id}}'" type="button" class="btn btn-success">Complete</button>
+                            <button onclick="window.location.href='/todos/editTodo/{{todo.id}}'" type="button" class="btn btn-info">Edit</button>
                         </td>
                     </tr>
+
+
+                    {% else %}  <!-- The todo is completed.-->
+                    <tr class="pointer alert alert-success">
+                        <td>Todo {{ loop.index }}</td>
+                        <td class="strike-through-td">{{todo.title}}</td>
+                        <td>
+                            <button onclick="window.location.href='/todos/deleteTodo/{{todo.id}}'" type="button" class="btn btn-danger">Delete</button>
+                            <button onclick="window.location.href='/todos/completeTodo/{{todo.id}}'" type="button" class="btn btn-success">Undo</button>
+                            <button onclick="window.location.href='/todos/editTodo/{{todo.id}}'" type="button" class="btn btn-info">Edit</button>
+                        </td>
+                    </tr>
+
+                    {% endif  %}
                     {% endfor %}
                 </tbody>
             </table>
