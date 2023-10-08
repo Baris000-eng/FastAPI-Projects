@@ -3,6 +3,9 @@ import sys
 from fastapi import Depends, HTTPException, status, APIRouter
 from pydantic import BaseModel
 from typing import Optional
+
+from starlette.requests import Request
+
 import models
 from passlib.context import CryptContext
 from sqlalchemy.orm import Session
@@ -10,9 +13,14 @@ from database import SessionLocal, engine
 from fastapi.security import OAuth2PasswordRequestForm, OAuth2PasswordBearer
 from datetime import datetime, timedelta
 from jose import jwt, JWTError
+from fastapi.responses import HTMLResponse
+from fastapi.templating import Jinja2Templates
 
 SECRET_KEY = "KlgH6AzYDeZeGwD288to79I3vTHT8wp7"
 ALGORITHM = "HS256"
+
+# Specifying the place where the Jinja2 templates live
+templates = Jinja2Templates(directory="templates")
 
 
 class CreateUser(BaseModel):
@@ -115,6 +123,11 @@ async def login_for_access_token(form_data: OAuth2PasswordRequestForm = Depends(
                                 user.id,
                                 expires_delta=token_expires)
     return {"token": token}
+
+
+@router.get("/", response_class=HTMLResponse)
+async def authenticationPage(request: Request):
+    return templates.TemplateResponse("loginpage.html", {"request": request})
 
 
 # Exceptions
