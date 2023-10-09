@@ -1,14 +1,11 @@
-import sys
 from starlette.requests import Request
-from typing import Optional
-from fastapi import Depends, HTTPException, APIRouter, Form
+from fastapi import Depends, APIRouter, Form
 from starlette.responses import RedirectResponse
 from starlette import status
-import models
-from database import engine, SessionLocal
+from src import models
+from src.database import engine, SessionLocal
 from sqlalchemy.orm import Session
-from pydantic import BaseModel, Field
-from .auth import get_current_user, user_exception
+from .auth import get_current_user
 from fastapi.responses import HTMLResponse
 from fastapi.templating import Jinja2Templates
 

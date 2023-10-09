@@ -2,8 +2,8 @@ from fastapi import FastAPI
 from starlette import status
 from starlette.responses import RedirectResponse
 
-import models
-from database import engine
+from src import models
+from src.database import engine
 from routers import auth, todos
 from starlette.staticfiles import StaticFiles
 

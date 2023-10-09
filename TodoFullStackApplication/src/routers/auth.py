@@ -1,22 +1,20 @@
-import sys
-
-from fastapi import Depends, Form, HTTPException, status, APIRouter, Response, Request
+from fastapi import Depends, Form, HTTPException, status, APIRouter, Request
 from fastapi.openapi.models import Response
 from pydantic import BaseModel
 from typing import Optional
 from starlette.responses import RedirectResponse
 
-import models
+from src import models
 from passlib.context import CryptContext
 from sqlalchemy.orm import Session
-from database import SessionLocal, engine
+from src.database import SessionLocal, engine
 from fastapi.security import OAuth2PasswordRequestForm, OAuth2PasswordBearer
 from datetime import datetime, timedelta
 from jose import jwt, JWTError
 from fastapi.responses import HTMLResponse
 from fastapi.templating import Jinja2Templates
 
-from routers.loginForm import LoginForm
+from src.routers.loginForm import LoginForm
 
 SECRET_KEY = "KlgH6AzYDeZeGwD288to79I3vTHT8wp7"
 ALGORITHM = "HS256"
