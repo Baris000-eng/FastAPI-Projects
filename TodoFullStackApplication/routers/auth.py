@@ -1,6 +1,6 @@
 import sys
 
-from fastapi import Depends, HTTPException, status, APIRouter, Response, Request
+from fastapi import Depends, Form, HTTPException, status, APIRouter, Response, Request
 from fastapi.openapi.models import Response
 from pydantic import BaseModel
 from typing import Optional
@@ -85,16 +85,21 @@ def create_access_token(username: str, user_id: int,
     return jwt.encode(encode, SECRET_KEY, algorithm=ALGORITHM)
 
 
-async def get_current_user(token: str = Depends(oauth2_bearer)):
+# token: str = Depends(oauth2_bearer)#
+async def get_current_user(request: Request):
     try:
+        token = request.cookies.get('access_token')  # obtaining the access token from the cookie
+        print("The access token is: " + str(token) + "")
+        if token is None:
+            return None
         payload = jwt.decode(token, SECRET_KEY, algorithms=[ALGORITHM])
         username: str = payload.get("sub")
         user_id: int = payload.get("id")
         if username is None or user_id is None:
-            raise get_user_exception()
+            raise user_exception()
         return {"username": username, "id": user_id}
     except JWTError:
-        raise get_user_exception()
+        return None
 
 
 @router.post("/create/user")
@@ -119,7 +124,7 @@ async def login_for_access_token(response: Response, form_data: OAuth2PasswordRe
                                  db: Session = Depends(get_db)):
     user = authenticate_user(form_data.username, form_data.password, db)
     if not user:
-        raise False
+        return False
     token_expires = timedelta(minutes=50)
     token = create_access_token(user.username,
                                 user.id,
@@ -132,6 +137,57 @@ async def login_for_access_token(response: Response, form_data: OAuth2PasswordRe
 @router.get("/register", response_class=HTMLResponse)
 async def register(request: Request):
     return templates.TemplateResponse("registerpage.html", {"request": request})
+
+
+@router.post("/register", response_class=HTMLResponse)
+async def register_user(
+    request: Request,
+    email: str = Form(...),
+    username: str = Form(...),
+    firstname: str = Form(...),
+    lastname: str = Form(...),
+    password: str = Form(...),
+    verification_password: str = Form(...),
+    database: Session = Depends(get_db)
+):
+    first_valid = database.query(models.Users).filter(models.Users.username == username).first()
+    second_valid = database.query(models.Users).filter(models.Users.email == email).first()
+
+    print(first_valid)
+    print(second_valid)
+    print(password)
+    print(verification_password)
+
+    print(first_valid is not None)
+    print(second_valid is not None)
+    print(password != verification_password)
+
+    if (first_valid is not None) or (second_valid is not None) or (password != verification_password):
+        failure_reg = "Invalid registration!"
+        return templates.TemplateResponse("registerpage.html", {"request": request, "msg": failure_reg})
+
+    user_model = models.Users()
+    user_model.username = username
+    user_model.first_name = firstname
+    user_model.last_name = lastname
+    user_model.email = email
+
+    password_hash = get_password_hash(password=password)
+    user_model.hashed_password = password_hash
+
+    user_model.is_active = True
+    database.add(user_model)
+    database.commit()
+    successful_reg = "User is successfully created!"
+    return templates.TemplateResponse("loginpage.html", {"request": request, "msg": successful_reg})
+
+
+@router.get("/logout")
+async def logout(request: Request):
+    message = "Logout is successful"
+    response = templates.TemplateResponse("loginpage.html", {"request": request, "msg": message})
+    response.delete_cookie(key="access_token")  # delete the cookie from the html template response
+    return response  # return the html template response where the cookie is deleted
 
 
 # Endpoint: http://127.0.0.1:8000/auth/
@@ -149,24 +205,16 @@ async def login(request: Request, database: Session = Depends(get_db)):
         validate_user_cookie = await login_for_access_token(response=response, db=database, form_data=form)
 
         if not validate_user_cookie:
-            message = "Incorrect Username or Password"
+            message = "Incorrect Username or Password!"
             return templates.TemplateResponse("loginpage.html", {"request": request, "msg": message})
 
         return response
     except HTTPException:
-        message = "Unknown Error"
+        message = "Unknown Error!"
         return templates.TemplateResponse("loginpage.html", {"request": request, "msg": message})
 
 
 # Exceptions
-def get_user_exception():
-    credentials_exception = HTTPException(
-        status_code=status.HTTP_401_UNAUTHORIZED,
-        detail="Could not validate credentials",
-        headers={"WWW-Authenticate": "Bearer"},
-    )
-    return credentials_exception
-
 
 def token_exception():
     token_exception_response = HTTPException(
@@ -175,3 +223,12 @@ def token_exception():
         headers={"WWW-Authenticate": "Bearer"},
     )
     return token_exception_response
+
+
+def user_exception():
+    credentials_exception = HTTPException(
+        status_code=status.HTTP_401_UNAUTHORIZED,
+        detail="Could not validate credentials",
+        headers={"WWW-Authenticate": "Bearer"},
+    )
+    return credentials_exception

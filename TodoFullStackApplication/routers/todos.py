@@ -8,7 +8,7 @@ import models
 from database import engine, SessionLocal
 from sqlalchemy.orm import Session
 from pydantic import BaseModel, Field
-from .auth import get_current_user, get_user_exception
+from .auth import get_current_user, user_exception
 from fastapi.responses import HTMLResponse
 from fastapi.templating import Jinja2Templates
 
@@ -34,16 +34,24 @@ def get_db():
 
 @router.get("/", response_class=HTMLResponse)
 async def readAllByUser(request: Request, database: Session = Depends(get_db)):
+
+    user = await get_current_user(request)
+    if user is None:
+        return RedirectResponse(url="/auth", status_code=status.HTTP_302_FOUND)
     # The below query will get all todos which belong to the owner with id 1.
-    todos = database.query(models.Todos).filter(models.Todos.owner_id == 1).all()
-    return templates.TemplateResponse("homepage.html", {"request": request, "todos": todos})
+    todos = database.query(models.Todos).filter(models.Todos.owner_id == user.get("id")).all()
+    return templates.TemplateResponse("homepage.html", {"request": request, "todos": todos, "user": user})
 
 
 # In the below function called 'editTodo', the 'todo_id' field is a path parameter.
 @router.get('/editTodo/{todo_id}', response_class=HTMLResponse)
 async def editTodo(request: Request, todo_id: int, database: Session = Depends(get_db)):
+    user = await get_current_user(request)
+    if user is None:
+        return RedirectResponse(url="/auth", status_code=status.HTTP_302_FOUND)
+
     todo = database.query(models.Todos).filter(models.Todos.id == todo_id).first()
-    return templates.TemplateResponse("editTodo.html", {"request": request, "todo": todo})
+    return templates.TemplateResponse("editTodo.html", {"request": request, "todo": todo, "user": user})
 
 
 @router.post('/editTodo/{todo_id}', response_class=HTMLResponse)
@@ -73,8 +81,12 @@ async def saveEditedTodo(request: Request, todo_id: int, title: str = Form(...),
 @router.get("/deleteTodo/{todo_id}")
 async def deleteTodo(request: Request, todo_id: int,
                      database: Session = Depends(get_db)):
+    user = await get_current_user(request)
+    if user is None:
+        return RedirectResponse(url="/auth", status_code=status.HTTP_302_FOUND)
+
     todo_model = database.query(models.Todos).filter(models.Todos.id == todo_id) \
-        .filter(models.Todos.owner_id == 1).first()
+        .filter(models.Todos.owner_id == user.get("id")).first()
     if todo_model is None:
         return RedirectResponse(url="/todos", status_code=status.HTTP_302_FOUND)
 
@@ -87,13 +99,17 @@ async def deleteTodo(request: Request, todo_id: int,
 @router.post('/addTodo', response_class=HTMLResponse)
 async def createTodo(request: Request, title: str = Form(...), description: str = Form(...),
                      priority: int = Form(...), database: Session = Depends(get_db)):
+    user = await get_current_user(request)
+    if user is None:
+        return RedirectResponse(url="/auth", status_code=status.HTTP_302_FOUND)
+
     # Create an instance of the Todos model
     todo_model = models.Todos(
         title=title,
         description=description,
         priority=priority,
         complete=False,
-        owner_id=1
+        owner_id=user.get("id") #
     )
 
     database.add(todo_model)
@@ -103,11 +119,18 @@ async def createTodo(request: Request, title: str = Form(...), description: str 
 
 @router.get('/addTodo', response_class=HTMLResponse)
 async def addNewTodo(request: Request):
-    return templates.TemplateResponse("addTodo.html", {"request": request})
+    user = await get_current_user(request)
+    if user is None:
+        return RedirectResponse(url="/auth", status_code=status.HTTP_302_FOUND)
+    return templates.TemplateResponse("addTodo.html", {"request": request, "user": user})
 
 
 @router.get("/completeTodo/{todo_id}", response_class=HTMLResponse)
 async def completeTodo(request: Request, todo_id: int, database: Session = Depends(get_db)):
+    user = await get_current_user(request)
+    if user is None:
+        return RedirectResponse(url="/auth", status_code=status.HTTP_302_FOUND)
+
     todo_model = database.query(models.Todos).filter(models.Todos.id == todo_id).first()
     todo_model.complete = not todo_model.complete
 

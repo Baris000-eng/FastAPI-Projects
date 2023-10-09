@@ -6,6 +6,17 @@
             Login
         </div>
         <div class="card-body">
+            {% if msg %}
+            {% if msg == 'Logout is successful' or msg == 'User is successfully created' %}
+            <div class="alert alert-success" role="alert">
+                {{msg}} <!-- Jinja template curly brackets -->
+            </div>
+            {% else %}
+            <div class="alert alert-danger" role="alert">
+                {{msg}}
+            </div>
+            {% endif %}
+            {% endif %}
             <form method="POST" action="/auth">
                 <div class="form-group">
                     <label>Username</label>
@@ -21,7 +32,7 @@
         </div>
 
         <div class="card-footer text-muted">
-            <a href="#">Register?</a>
+            <a href="/auth/register">Register?</a>
         </div>
 
 
